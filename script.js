@@ -6,7 +6,6 @@ const supabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
-
 const searchBar = document.querySelector(".search-bar");
 
 const genreButtons =
