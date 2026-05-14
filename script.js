@@ -1,48 +1,34 @@
+// 1. SUPABASE CONNECTION
 const SUPABASE_URL = "https://bbixsobnhcoyikvodxdg.supabase.co";
 const SUPABASE_ANON_KEY = "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiaXhzb2JuaGNveWlrdm9keGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Njc2MTQsImV4cCI6MjA5NDM0MzYxNH0.Ogx2agY-KVRKoRnl4kYhJy5G4_da0rqzRgIxqRr52TM";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentShine = 0;
 
+// 2. INITIALIZE PAGE
 async function init() {
+    // Check if a user is actually logged in
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
+        // If not logged in, send them back to login page
         window.location.href = "login.html";
         return;
     }
 
-    // Set Header Avatar from GitHub if available
+    // UPDATE PROFILE IMAGES
+    // This puts your GitHub/User photo in the Nav and the "YOU" story circle
     if (user.user_metadata.avatar_url) {
-        document.getElementById('avatarImg').src = user.user_metadata.avatar_url;
+        const userImg = user.user_metadata.avatar_url;
+        document.getElementById('avatarImg').src = userImg;
+        document.getElementById('storyAvatar').src = userImg;
     }
 
-    renderStories(user);
+    // Load your saved Shine points from the database
     loadUserData(user.id);
 }
 
-function renderStories(user) {
-    const userAvatar = user.user_metadata.avatar_url || "https://via.placeholder.com/150";
-    
-    // THE 3 STORIES + YOU
-    const stories = [
-        { name: "Your Story", img: userAvatar, active: true },
-        { name: "The Void", img: "https://images.unsplash.com/photo-1519681393784-d120267953ba?w=150" },
-        { name: "Neon", img: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=150" },
-        { name: "Ethereal", img: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=150" }
-    ];
-
-    const list = document.getElementById('storyList');
-    list.innerHTML = stories.map(s => `
-        <div class="story-item">
-            <div class="story-circle">
-                <img src="${s.img}" alt="${s.name}">
-            </div>
-            <p class="story-name">${s.name.toUpperCase()}</p>
-        </div>
-    `).join('');
-}
-
+// 3. DATABASE: LOAD DATA
 async function loadUserData(userId) {
     let { data, error } = await supabase
         .from('profiles')
@@ -54,26 +40,39 @@ async function loadUserData(userId) {
         currentShine = data.shine_points;
         updateUI();
     } else {
-        // Create profile if first login
+        // If it's a brand new user, create their row in the database
         await supabase.from('profiles').insert({ id: userId, shine_points: 0 });
     }
 }
 
+// 4. UI: UPDATE DISPLAY
 function updateUI() {
-    document.getElementById('shineDisplay').innerText = currentShine;
+    const display = document.getElementById('shineDisplay');
+    if (display) {
+        display.innerText = currentShine;
+    }
 }
 
+// 5. ACTION: INCREASE & SAVE SHINE
 document.getElementById('increaseShine').onclick = async () => {
     currentShine++;
     updateUI();
+    
     const { data: { user } } = await supabase.auth.getUser();
-    // Update Supabase
-    await supabase.from('profiles').update({ shine_points: currentShine }).eq('id', user.id);
+    if (user) {
+        // This saves the number to your Supabase table instantly
+        await supabase
+            .from('profiles')
+            .update({ shine_points: currentShine })
+            .eq('id', user.id);
+    }
 };
 
+// 6. ACTION: LOGOUT
 document.getElementById('logoutBtn').onclick = async () => {
     await supabase.auth.signOut();
     window.location.href = "login.html";
 };
 
+// Start the script
 init();
