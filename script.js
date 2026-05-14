@@ -1,171 +1,73 @@
+// INITIALIZATION
 const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co";
-
 const SUPABASE_ANON_KEY = "sb_publishable_337gZQxl2pqu6OvNkoeDOQ_lG0xgdc9";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-/* ---------------- SESSION CHECK ---------------- */
-
+// SESSION CHECK - Runs on every page load
 async function checkUser() {
-  const { data } = await supabase.auth.getSession();
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  const authOnlyLinks = document.querySelectorAll('.auth-only');
+  const loginLink = document.getElementById('login-link');
+  const logoutBtn = document.getElementById('logout-btn');
 
-  if (data.session) {
-    console.log("Logged in:", data.session.user.email);
+  if (session) {
+    // User is logged in
+    authOnlyLinks.forEach(link => link.style.display = 'block');
+    if (loginLink) loginLink.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = 'block';
+    console.log("Logged in as:", session.user.email);
   } else {
-    console.log("No active session");
+    // User is logged out
+    authOnlyLinks.forEach(link => link.style.display = 'none');
+    if (loginLink) loginLink.style.display = 'block';
+    if (logoutBtn) logoutBtn.style.display = 'none';
   }
 }
 
 checkUser();
 
-/* ---------------- LOGIN ---------------- */
+// LOGIN LOGIC
+async function handleLogin() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
 
-async function loginUser(email, password) {
-
-  console.log("Login Clicked");
-
-  const { data, error } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    alert(error.message);
+    alert("Error: " + error.message);
   } else {
-    alert("Login successful!");
     window.location.href = "index.html";
   }
-
 }
 
-function handleLogin() {
-
-  const email = document.querySelector('input[type="email"]')?.value;
-  const password = document.querySelector('input[type="password"]')?.value;
-
-  if (!email || !password) {
-    alert("Please enter email and password");
-    return;
-  }
-
-  loginUser(email, password);
-
-}
-
-/* ---------------- GITHUB LOGIN ---------------- */
-
+// GITHUB LOGIN (GitHub Pages Fix)
 async function loginWithGitHub() {
+  // This detects if you are in a subfolder on GitHub Pages
+  const redirectUrl = window.location.origin + window.location.pathname.replace('login.html', 'index.html');
+  
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: { redirectTo: redirectUrl }
+  });
 
-  const { error } =
-    await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: {
-        redirectTo: window.location.origin + "/index.html"
-      }
-    });
-
-  if (error) {
-    alert(error.message);
-  }
-
+  if (error) alert(error.message);
 }
 
-/* ---------------- SEARCH (SAFE) ---------------- */
+// LOGOUT
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+}
 
+// SEARCH FILTER
 const searchBar = document.querySelector(".search-bar");
-
 if (searchBar) {
-
   searchBar.addEventListener("input", () => {
-
-    const searchValue = searchBar.value.toLowerCase();
-
-    document.querySelectorAll(".book-link").forEach((book) => {
-
-      const title =
-        book.querySelector("h3")?.textContent?.toLowerCase() || "";
-
-      if (title.includes(searchValue)) {
-        book.style.display = "block";
-      } else {
-        book.style.display = "none";
-      }
-
+    const query = searchBar.value.toLowerCase();
+    document.querySelectorAll(".book-link").forEach(card => {
+      const title = card.querySelector("h3").innerText.toLowerCase();
+      card.style.display = title.includes(query) ? "block" : "none";
     });
-
   });
-
-}
-
-/* ---------------- GENRE FILTER (SAFE) ---------------- */
-
-const genreButtons = document.querySelectorAll(".genre-btn");
-
-if (genreButtons.length > 0) {
-
-  genreButtons.forEach((button) => {
-
-    button.addEventListener("click", () => {
-
-      genreButtons.forEach((btn) => btn.classList.remove("active"));
-
-      button.classList.add("active");
-
-      const genre = button.textContent.toLowerCase();
-
-      document.querySelectorAll(".book-link").forEach((book) => {
-
-        const title =
-          book.querySelector("h3")?.textContent?.toLowerCase() || "";
-
-        if (
-          genre === "all" ||
-          (genre === "fantasy" && title.includes("lantern")) ||
-          (genre === "horror" && title.includes("rain")) ||
-          (genre === "philosophy" && title.includes("fragments")) ||
-          (genre === "romance" && title.includes("fragments")) ||
-          (genre === "sci-fi" && title.includes("lantern"))
-        ) {
-          book.style.display = "block";
-        } else {
-          book.style.display = "none";
-        }
-
-      });
-
-    });
-
-  });
-
-}
-
-/* ---------------- SCROLL ANIMATION ---------------- */
-
-const hiddenElements = document.querySelectorAll(
-  ".book-card, .continue-reading, .hero-content, .chapter-container"
-);
-
-if (hiddenElements.length > 0) {
-
-  const observer = new IntersectionObserver((entries) => {
-
-    entries.forEach((entry) => {
-
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show");
-      }
-
-    });
-
-  });
-
-  hiddenElements.forEach((el) => {
-    el.classList.add("hidden");
-    observer.observe(el);
-  });
-
 }
