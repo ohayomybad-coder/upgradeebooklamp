@@ -128,7 +128,7 @@ hiddenElements.forEach((el) => {
 
 });
 async function loginUser(email, password) {
-
+console.log{"Login Clicked};
   const { data, error } =
     await supabase.auth.signInWithPassword({
       email,
