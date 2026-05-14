@@ -1,7 +1,7 @@
 const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_337gZQxl2pqu6OvNkoeDOQ_lG0xgdc9";
 
-// Check if supabase loaded correctly from the CDN
+// Initialize Supabase only if the script loaded
 const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 /* ---------------- LOGIN ---------------- */
@@ -9,7 +9,10 @@ async function handleLogin() {
   const emailInput = document.querySelector('input[type="email"]');
   const passwordInput = document.querySelector('input[type="password"]');
 
-  if (!emailInput || !passwordInput) return;
+  if (!emailInput || !passwordInput) {
+    alert("Could not find login fields");
+    return;
+  }
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email: emailInput.value,
@@ -19,7 +22,7 @@ async function handleLogin() {
   if (error) {
     alert(error.message);
   } else {
-    alert("Welcome back!");
+    alert("Login successful!");
     window.location.href = "index.html";
   }
 }
@@ -46,13 +49,17 @@ genreButtons.forEach((button) => {
     const genre = button.textContent.toLowerCase();
     document.querySelectorAll(".book-link").forEach((book) => {
       const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
-      if (genre === "all" || title.includes(genre)) {
+      
+      if (genre === "all") {
+        book.style.display = "block";
+      } else if (genre === "fantasy" && title.includes("lantern")) {
+        book.style.display = "block";
+      } else if (genre === "horror" && title.includes("rain")) {
+        book.style.display = "block";
+      } else if ((genre === "philosophy" || genre === "romance") && title.includes("fragments")) {
         book.style.display = "block";
       } else {
-        // Simple logic for your specific titles
-        if (genre === "fantasy" && title.includes("lantern")) book.style.display = "block";
-        else if (genre === "horror" && title.includes("rain")) book.style.display = "block";
-        else book.style.display = "none";
+        book.style.display = "none";
       }
     });
   });
