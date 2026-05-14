@@ -1,78 +1,148 @@
-// 1. SUPABASE CONNECTION
-const SUPABASE_URL = "https://bbixsobnhcoyikvodxdg.supabase.co";
-const SUPABASE_ANON_KEY = "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiaXhzb2JuaGNveWlrdm9keGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Njc2MTQsImV4cCI6MjA5NDM0MzYxNH0.Ogx2agY-KVRKoRnl4kYhJy5G4_da0rqzRgIxqRr52TM";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co";
 
-let currentShine = 0;
+const SUPABASE_ANON_KEY = "sb_publishable_337gZQxl2pqu6OvNkoeDOQ_lG0xgdc9";
 
-// 2. INITIALIZE PAGE
-async function init() {
-    // Check if a user is actually logged in
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-        // If not logged in, send them back to login page
-        window.location.href = "login.html";
-        return;
-    }
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
-    // UPDATE PROFILE IMAGES
-    // This puts your GitHub/User photo in the Nav and the "YOU" story circle
-    if (user.user_metadata.avatar_url) {
-        const userImg = user.user_metadata.avatar_url;
-        document.getElementById('avatarImg').src = userImg;
-        document.getElementById('storyAvatar').src = userImg;
-    }
+/* ---------------- SEARCH (SAFE) ---------------- */
 
-    // Load your saved Shine points from the database
-    loadUserData(user.id);
+const searchBar = document.querySelector(".search-bar");
+
+if (searchBar) {
+  searchBar.addEventListener("input", () => {
+
+    const searchValue = searchBar.value.toLowerCase();
+
+    document.querySelectorAll(".book-link").forEach((book) => {
+
+      const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
+
+      if (title.includes(searchValue)) {
+        book.style.display = "block";
+      } else {
+        book.style.display = "none";
+      }
+
+    });
+
+  });
 }
 
-// 3. DATABASE: LOAD DATA
-async function loadUserData(userId) {
-    let { data, error } = await supabase
-        .from('profiles')
-        .select('shine_points')
-        .eq('id', userId)
-        .single();
+/* ---------------- GENRE FILTER (SAFE) ---------------- */
 
-    if (data) {
-        currentShine = data.shine_points;
-        updateUI();
-    } else {
-        // If it's a brand new user, create their row in the database
-        await supabase.from('profiles').insert({ id: userId, shine_points: 0 });
-    }
+const genreButtons = document.querySelectorAll(".genre-btn");
+
+if (genreButtons.length > 0) {
+
+  genreButtons.forEach((button) => {
+
+    button.addEventListener("click", () => {
+
+      genreButtons.forEach((btn) => btn.classList.remove("active"));
+
+      button.classList.add("active");
+
+      const genre = button.textContent.toLowerCase();
+
+      document.querySelectorAll(".book-link").forEach((book) => {
+
+        const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
+
+        if (
+          genre === "all" ||
+          (genre === "fantasy" && title.includes("lantern")) ||
+          (genre === "horror" && title.includes("rain")) ||
+          (genre === "philosophy" && title.includes("fragments")) ||
+          (genre === "romance" && title.includes("fragments")) ||
+          (genre === "sci-fi" && title.includes("lantern"))
+        ) {
+          book.style.display = "block";
+        } else {
+          book.style.display = "none";
+        }
+
+      });
+
+    });
+
+  });
+
 }
 
-// 4. UI: UPDATE DISPLAY
-function updateUI() {
-    const display = document.getElementById('shineDisplay');
-    if (display) {
-        display.innerText = currentShine;
-    }
+/* ---------------- SCROLL REVEAL (SAFE) ---------------- */
+
+const hiddenElements = document.querySelectorAll(
+  ".book-card, .continue-reading, .hero-content, .chapter-container"
+);
+
+if (hiddenElements.length > 0) {
+
+  const observer = new IntersectionObserver((entries) => {
+
+    entries.forEach((entry) => {
+
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+      }
+
+    });
+
+  });
+
+  hiddenElements.forEach((el) => {
+    el.classList.add("hidden");
+    observer.observe(el);
+  });
+
 }
 
-// 5. ACTION: INCREASE & SAVE SHINE
-document.getElementById('increaseShine').onclick = async () => {
-    currentShine++;
-    updateUI();
-    
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-        // This saves the number to your Supabase table instantly
-        await supabase
-            .from('profiles')
-            .update({ shine_points: currentShine })
-            .eq('id', user.id);
-    }
-};
+/* ---------------- LOGIN ---------------- */
 
-// 6. ACTION: LOGOUT
-document.getElementById('logoutBtn').onclick = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "login.html";
-};
+async function loginUser(email, password) {
 
-// Start the script
-init();
+  console.log("Login Clicked");
+
+  const { data, error } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    alert("Login successful!");
+    window.location.href = "index.html";
+  }
+
+}
+
+function handleLogin() {
+
+  const email = document.querySelector('input[type="email"]')?.value;
+  const password = document.querySelector('input[type="password"]')?.value;
+
+  loginUser(email, password);
+
+}
+
+/* ---------------- GITHUB LOGIN ---------------- */
+
+async function loginWithGitHub() {
+
+  const { data, error } =
+    await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: "http://127.0.0.1:5500/index.html"
+      }
+    });
+
+  if (error) {
+    alert(error.message);
+  }
+
+}
