@@ -1,66 +1,43 @@
-const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_337gZQxl2pqu6OvNkoeDOQ_lG0xgdc9";
+/* ---------------- SUPABASE CONFIG ---------------- */
+const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co"; //
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bmlma2pudnhjeWJobmtmcWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NDczNTYsImV4cCI6MjA5NDMyMzM1Nn0.DIcLUpP5XtTTTmBCLveZ-sxUyIwRd9QBPct79LTmXQk";
 
-// Initialize Supabase only if the script loaded
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ---------------- LOGIN ---------------- */
+/* ---------------- AUTHENTICATION ---------------- */
 async function handleLogin() {
-  const emailInput = document.querySelector('input[type="email"]');
-  const passwordInput = document.querySelector('input[type="password"]');
+  const email = document.querySelector('input[type="email"]')?.value; //
+  const password = document.querySelector('input[type="password"]')?.value; //
 
-  if (!emailInput || !passwordInput) {
-    alert("Could not find login fields");
-    return;
-  }
+  if (!email || !password) return alert("Please enter your details.");
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: emailInput.value,
-    password: passwordInput.value
-  });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    alert(error.message);
+    alert("Error: " + error.message);
   } else {
-    alert("Login successful!");
-    window.location.href = "index.html";
+    window.location.href = "index.html"; 
   }
 }
 
-/* ---------------- SEARCH ---------------- */
-const searchBar = document.querySelector(".search-bar");
-if (searchBar) {
-  searchBar.addEventListener("input", () => {
-    const searchValue = searchBar.value.toLowerCase();
-    document.querySelectorAll(".book-link").forEach((book) => {
-      const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
-      book.style.display = title.includes(searchValue) ? "block" : "none";
-    });
+/* ---------------- READING PROGRESS ---------------- */
+const progressBar = document.querySelector('.reading-progress'); //
+if (progressBar) {
+  window.addEventListener('scroll', () => {
+    const totalHeight = document.body.scrollHeight - window.innerHeight;
+    const progress = (window.pageYOffset / totalHeight) * 100;
+    progressBar.style.width = progress + '%';
   });
 }
 
-/* ---------------- GENRE FILTER ---------------- */
-const genreButtons = document.querySelectorAll(".genre-btn");
-genreButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    genreButtons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-    
-    const genre = button.textContent.toLowerCase();
-    document.querySelectorAll(".book-link").forEach((book) => {
-      const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
-      
-      if (genre === "all") {
-        book.style.display = "block";
-      } else if (genre === "fantasy" && title.includes("lantern")) {
-        book.style.display = "block";
-      } else if (genre === "horror" && title.includes("rain")) {
-        book.style.display = "block";
-      } else if ((genre === "philosophy" || genre === "romance") && title.includes("fragments")) {
-        book.style.display = "block";
-      } else {
-        book.style.display = "none";
-      }
+/* ---------------- SEARCH & FILTERS ---------------- */
+const searchBar = document.querySelector(".search-bar"); //
+if (searchBar) {
+  searchBar.addEventListener("input", (e) => {
+    const query = e.target.value.toLowerCase();
+    document.querySelectorAll(".book-link").forEach(book => {
+      const title = book.querySelector("h3").innerText.toLowerCase();
+      book.style.display = title.includes(query) ? "block" : "none";
     });
   });
-});
+}
