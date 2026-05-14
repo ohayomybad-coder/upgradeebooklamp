@@ -941,3 +941,25 @@ body{
   }
 
 }
+.github-btn{
+  width:100%;
+
+  margin-top:15px;
+
+  background:#24292e;
+  color:white;
+
+  border:none;
+
+  padding:16px;
+
+  border-radius:40px;
+
+  cursor:pointer;
+
+  transition:0.3s;
+}
+
+.github-btn:hover{
+  transform:translateY(-3px);
+}
