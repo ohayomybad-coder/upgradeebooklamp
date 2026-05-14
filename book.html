@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Whispers Beyond Rain</title>
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <div class="reading-progress"></div>
+
+  <nav class="navbar">
+
+    <div class="logo">NOCTARA</div>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="#">Library</a>
+      <a href="#">Profile</a>
+    </div>
+
+  </nav>
+
+  <section class="book-hero">
+
+    <div class="overlay"></div>
+
+    <img
+      class="hero-cover"
+      src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1400&auto=format&fit=crop"
+      alt="Book Cover"
+    >
+
+    <div class="book-hero-content">
+
+      <p class="genre">
+        Dark Fantasy • Emotional Fiction
+      </p>
+
+      <h1>
+        Whispers Beyond Rain
+      </h1>
+
+      <p class="author">
+        Written by Aether Vale
+      </p>
+
+      <p class="description">
+        In a city where the rain never stops,
+        forgotten memories begin returning through voices hidden inside storms.
+      </p>
+
+      <button class="start-reading-btn">
+        Start Reading
+      </button>
+
+    </div>
+
+  </section>
+
+  <section class="chapter-section">
+
+    <div class="chapter-container">
+
+      <div class="chapter-header">
+
+        <span>Chapter 1</span>
+
+        <h2>
+          The City That Never Slept
+        </h2>
+
+      </div>
+
+      <div class="chapter-content">
+
+        <p>
+          Rain crawled slowly across the shattered windows of the apartment.
+          The city lights below flickered through the fog like fading memories.
+        </p>
+
+        <p>
+          Kael sat silently near the balcony,
+          listening to the endless storm.
+        </p>
+
+        <p>
+          Somewhere between the thunder
+          and the distant train sirens,
+          he thought he heard someone whisper his name.
+        </p>
+
+        <p>
+          The streets below were empty.
+          Neon reflections trembled in puddles
+          across the dark pavement.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <script>
+
+    const progressBar = document.querySelector('.reading-progress');
+
+    window.addEventListener('scroll', () => {
+
+      const totalHeight =
+        document.body.scrollHeight - window.innerHeight;
+
+      const progress =
+        (window.pageYOffset / totalHeight) * 100;
+
+      progressBar.style.width = progress + '%';
+
+    });
+
+  </script>
+
+</body>
+</html>
