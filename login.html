@@ -9,11 +9,12 @@
 
   <link rel="stylesheet" href="style.css"/>
 
+  <!-- Supabase SDK (IMPORTANT) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="script.js"></script>
 </head>
 
 <body>
@@ -22,80 +23,42 @@
 
     <div class="auth-container">
 
-      <p class="auth-label">
-        WELCOME BACK
-      </p>
+      <p class="auth-label">WELCOME BACK</p>
 
-      <h1>
-        Enter Noctara
-      </h1>
+      <h1>Enter Noctara</h1>
 
       <p class="auth-description">
-        Continue reading immersive stories and publish
-        worlds of your own imagination.
+        Continue reading immersive stories and publish your imagination.
       </p>
 
       <form class="auth-form">
 
         <div class="input-group">
-
           <label>Email</label>
-
-          <input
-            type="email"
-            placeholder="Enter your email"
-          >
-
+          <input type="email" placeholder="Enter your email">
         </div>
 
         <div class="input-group">
-
           <label>Password</label>
-
-          <input
-            type="password"
-            placeholder="Enter your password"
-          >
-
-        </div>
-
-        <div class="auth-options">
-
-          <label class="remember-box">
-
-            <input type="checkbox">
-
-            <span>Remember me</span>
-
-          </label>
-
-          <a href="#">
-            Forgot Password?
-          </a>
-
+          <input type="password" placeholder="Enter your password">
         </div>
 
         <button class="login-btn" type="button" onclick="handleLogin()">
-  Login
-</button>
+          Login
+        </button>
+
         <button type="button" class="github-btn" onclick="loginWithGitHub()">
-  Continue with GitHub
-</button>
+          Continue with GitHub
+        </button>
+
       </form>
-
-      <p class="signup-text">
-
-        Don’t have an account?
-
-        <a href="#">
-          Create one
-        </a>
-
-      </p>
 
     </div>
 
   </section>
+
+  <!-- YOUR JS FILE (IMPORTANT) -->
+  <script src="script.js"></script>
 
 </body>
 </html>
