@@ -523,5 +523,22 @@ body{
   .continue-text h3{
     font-size:26px;
   }
+  /* SCROLL REVEAL */
+
+.hidden{
+  opacity:0;
+
+  transform:translateY(40px);
+
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.show{
+  opacity:1;
+
+  transform:translateY(0);
+}
 
 }
