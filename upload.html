@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Upload Story</title>
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <nav class="navbar">
+
+    <div class="logo">NOCTARA</div>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="#">Library</a>
+      <a href="#">Profile</a>
+    </div>
+
+  </nav>
+
+  <section class="upload-section">
+
+    <div class="upload-container">
+
+      <p class="upload-label">
+        CREATE YOUR STORY
+      </p>
+
+      <h1>
+        Publish a New Book
+      </h1>
+
+      <p class="upload-description">
+        Share your world, your emotions and your imagination
+        with readers around the globe.
+      </p>
+
+      <form class="upload-form">
+
+        <div class="input-group">
+
+          <label>Book Title</label>
+
+          <input
+            type="text"
+            placeholder="Enter your book title"
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Genre</label>
+
+          <select>
+
+            <option>Fantasy</option>
+            <option>Romance</option>
+            <option>Horror</option>
+            <option>Sci-Fi</option>
+            <option>Philosophy</option>
+
+          </select>
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Description</label>
+
+          <textarea
+            rows="5"
+            placeholder="Write a short description..."
+          ></textarea>
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Upload Cover</label>
+
+          <input type="file">
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Chapter Title</label>
+
+          <input
+            type="text"
+            placeholder="Chapter 1"
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Chapter Content</label>
+
+          <textarea
+            rows="12"
+            placeholder="Begin writing your story..."
+          ></textarea>
+
+        </div>
+
+        <div class="upload-buttons">
+
+          <button type="button" class="draft-btn">
+            Save Draft
+          </button>
+
+          <button type="submit" class="publish-btn">
+            Publish Story
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </section>
+
+</body>
+</html>
