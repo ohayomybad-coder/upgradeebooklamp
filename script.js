@@ -6,135 +6,112 @@ const supabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
+
+/* ---------------- SEARCH (SAFE) ---------------- */
+
 const searchBar = document.querySelector(".search-bar");
 
-const genreButtons =
-  document.querySelectorAll(".genre-btn");
+if (searchBar) {
+  searchBar.addEventListener("input", () => {
 
-const bookLinks =
-  document.querySelectorAll(".book-link");
+    const searchValue = searchBar.value.toLowerCase();
 
-// SEARCH
+    document.querySelectorAll(".book-link").forEach((book) => {
 
-searchBar.addEventListener("input", () => {
+      const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
 
-  const searchValue =
-    searchBar.value.toLowerCase();
-
-  bookLinks.forEach((book) => {
-
-    const title =
-      book.querySelector("h3")
-      .textContent
-      .toLowerCase();
-
-    if(title.includes(searchValue)){
-
-      book.style.display = "block";
-
-    } else {
-
-      book.style.display = "none";
-
-    }
-
-  });
-
-});
-
-// GENRE FILTER
-
-genreButtons.forEach((button) => {
-
-  button.addEventListener("click", () => {
-
-    genreButtons.forEach((btn) => {
-      btn.classList.remove("active");
-    });
-
-    button.classList.add("active");
-
-    const genre =
-      button.textContent.toLowerCase();
-
-    bookLinks.forEach((book) => {
-
-      const title =
-        book.querySelector("h3")
-        .textContent
-        .toLowerCase();
-
-      if(
-        genre === "all" ||
-
-        (genre === "fantasy" &&
-          title.includes("lantern")) ||
-
-        (genre === "horror" &&
-          title.includes("rain")) ||
-
-        (genre === "philosophy" &&
-          title.includes("fragments")) ||
-
-        (genre === "romance" &&
-          title.includes("fragments")) ||
-
-        (genre === "sci-fi" &&
-          title.includes("lantern"))
-
-      ){
-
+      if (title.includes(searchValue)) {
         book.style.display = "block";
-
       } else {
-
         book.style.display = "none";
-
       }
 
     });
 
   });
+}
 
-});
-// SCROLL REVEAL ANIMATION
+/* ---------------- GENRE FILTER (SAFE) ---------------- */
 
-const hiddenElements =
-  document.querySelectorAll(
-    ".book-card, .continue-reading, .hero-content, .chapter-container"
-  );
+const genreButtons = document.querySelectorAll(".genre-btn");
 
-const observer =
-  new IntersectionObserver((entries) => {
+if (genreButtons.length > 0) {
+
+  genreButtons.forEach((button) => {
+
+    button.addEventListener("click", () => {
+
+      genreButtons.forEach((btn) => btn.classList.remove("active"));
+
+      button.classList.add("active");
+
+      const genre = button.textContent.toLowerCase();
+
+      document.querySelectorAll(".book-link").forEach((book) => {
+
+        const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
+
+        if (
+          genre === "all" ||
+          (genre === "fantasy" && title.includes("lantern")) ||
+          (genre === "horror" && title.includes("rain")) ||
+          (genre === "philosophy" && title.includes("fragments")) ||
+          (genre === "romance" && title.includes("fragments")) ||
+          (genre === "sci-fi" && title.includes("lantern"))
+        ) {
+          book.style.display = "block";
+        } else {
+          book.style.display = "none";
+        }
+
+      });
+
+    });
+
+  });
+
+}
+
+/* ---------------- SCROLL REVEAL (SAFE) ---------------- */
+
+const hiddenElements = document.querySelectorAll(
+  ".book-card, .continue-reading, .hero-content, .chapter-container"
+);
+
+if (hiddenElements.length > 0) {
+
+  const observer = new IntersectionObserver((entries) => {
 
     entries.forEach((entry) => {
 
-      if(entry.isIntersecting){
-
+      if (entry.isIntersecting) {
         entry.target.classList.add("show");
-
       }
 
     });
 
   });
 
-hiddenElements.forEach((el) => {
+  hiddenElements.forEach((el) => {
+    el.classList.add("hidden");
+    observer.observe(el);
+  });
 
-  el.classList.add("hidden");
+}
 
-  observer.observe(el);
+/* ---------------- LOGIN ---------------- */
 
-});
 async function loginUser(email, password) {
-console.log{"Login Clicked};
+
+  console.log("Login Clicked");
+
   const { data, error } =
     await supabase.auth.signInWithPassword({
       email,
       password
     });
 
-  if(error){
+  if (error) {
     alert(error.message);
   } else {
     alert("Login successful!");
@@ -142,17 +119,18 @@ console.log{"Login Clicked};
   }
 
 }
+
 function handleLogin() {
 
-  const email =
-    document.querySelector('input[type="email"]').value;
-
-  const password =
-    document.querySelector('input[type="password"]').value;
+  const email = document.querySelector('input[type="email"]')?.value;
+  const password = document.querySelector('input[type="password"]')?.value;
 
   loginUser(email, password);
 
 }
+
+/* ---------------- GITHUB LOGIN ---------------- */
+
 async function loginWithGitHub() {
 
   const { data, error } =
