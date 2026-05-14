@@ -1,82 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Noctara</title>
-  <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noctara | Feed</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body style="background: #080808; color: white; margin: 0; font-family: 'Inter', sans-serif;">
 
-  <nav class="navbar">
-    <div class="logo">NOCTARA</div>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="#">Library</a>
-      <a href="upload.html">Upload</a>
-      <a href="profile.html">Profile</a>
-      <a href="login.html">Login</a>
-    </div>
-  </nav>
-
-  <section class="books-section" style="margin-top: 100px;">
-    <div class="section-top">
-      <h2>Discover Stories</h2>
-      <input type="text" placeholder="Search stories..." class="search-bar">
-    </div>
-
-    <div class="genres">
-      <button class="genre-btn active">All</button>
-      <button class="genre-btn">Fantasy</button>
-      <button class="genre-btn">Horror</button>
-      <button class="genre-btn">Philosophy</button>
-    </div>
-
-    <div class="books-grid">
-      <a href="book.html" class="book-link">
-        <div class="book-card">
-          <div class="image-wrapper">
-            <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1200&auto=format&fit=crop" alt="Book Cover">
-          </div>
-          <div class="book-info">
-            <h3>Whispers Beyond Rain</h3>
-            <p>A melancholic journey through forgotten memories.</p>
-            <span>12 Chapters</span>
-          </div>
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid #1a1a1a;">
+        <h2 style="letter-spacing: 5px; font-weight: 200; margin: 0;">NOCTARA</h2>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div id="userProfile" style="display: flex; align-items: center; gap: 10px;">
+                <img id="avatarImg" src="https://via.placeholder.com/40" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #333; object-fit: cover;">
+                <span id="userEmail" style="font-size: 14px; color: #888;">...</span>
+            </div>
+            <button id="logoutBtn" style="background: transparent; color: #ff4d4d; border: 1px solid #441a1a; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 12px;">Logout</button>
         </div>
-      </a>
+    </nav>
 
-      <a href="book.html" class="book-link">
-        <div class="book-card">
-          <div class="image-wrapper">
-            <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=1200&auto=format&fit=crop" alt="Book Cover">
-          </div>
-          <div class="book-info">
-            <h3>The Last Lantern</h3>
-            <p>In a world without sunlight, one lantern still burns.</p>
-            <span>24 Chapters</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="book.html" class="book-link">
-        <div class="book-card">
-          <div class="image-wrapper">
-            <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1200&auto=format&fit=crop" alt="Book Cover">
-          </div>
-          <div class="book-info">
-            <h3>Broken Fragments</h3>
-            <p>Pieces of a life left behind in the stars.</p>
-            <span>8 Chapters</span>
-          </div>
-        </div>
-      </a>
+    <div class="stories-container" style="display: flex; gap: 15px; padding: 20px 40px; overflow-x: auto; scrollbar-width: none;">
+        <div class="story-add" style="min-width: 70px; height: 70px; border-radius: 50%; border: 2px dashed #333; display: flex; align-items: center; justify-content: center; cursor: pointer;">+</div>
+        <div id="storyList" style="display: flex; gap: 15px;"></div>
     </div>
-  </section>
 
-  <script src="script.js"></script>
+    <main style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div class="shine-card" style="background: #111; border: 1px solid #222; border-radius: 20px; padding: 30px; text-align: center;">
+            <h3 style="font-weight: 300; color: #888;">YOUR SHINE</h3>
+            <div id="shineDisplay" style="font-size: 48px; font-weight: 700; margin: 10px 0;">0</div>
+            <button id="increaseShine" style="background: white; color: black; border: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; cursor: pointer; transition: 0.3s;">Increase Shine</button>
+        </div>
+
+        <div id="postFeed" style="margin-top: 30px;">
+            <p style="color: #444; text-align: center; font-size: 14px;">Your feed is quiet... for now.</p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
