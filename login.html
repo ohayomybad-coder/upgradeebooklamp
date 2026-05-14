@@ -9,7 +9,7 @@
 
   <link rel="stylesheet" href="style.css"/>
 
-  <!-- Supabase SDK (IMPORTANT) -->
+  <!-- Supabase SDK (MUST BE FIRST) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +43,7 @@
           <input type="password" placeholder="Enter your password">
         </div>
 
-        <button class="login-btn" type="button" onclick="handleLogin()">
+        <button type="button" class="login-btn" onclick="handleLogin()">
           Login
         </button>
 
@@ -57,7 +57,7 @@
 
   </section>
 
-  <!-- YOUR JS FILE (IMPORTANT) -->
+  <!-- YOUR JS FILE (MUST BE LAST) -->
   <script src="script.js"></script>
 
 </body>
