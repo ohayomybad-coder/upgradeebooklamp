@@ -231,3 +231,57 @@ body {
     height: 350px;
   }
 }
+/* --- BOOK CARD COLOR & LAYOUT FIX --- */
+
+/* Fix for the purple/blue text and underlines */
+.book-link, 
+.book-link:visited, 
+.book-link:hover, 
+.book-link:active {
+  text-decoration: none !important; /* Removes the underline */
+  color: inherit !important;      /* Stops links from turning purple */
+}
+
+/* Force the book titles to be white and readable */
+.book-info h3 {
+  color: #ffffff !important; 
+  margin-top: 10px;
+  margin-bottom: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Fix for the description text and chapter count */
+.book-info p {
+  color: #a0a0a0 !important; /* Subtle gray for description */
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+/* Ensure the image doesn't squash the text */
+.image-wrapper {
+  width: 100%;
+  height: 380px;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Fix for the genre buttons at the top */
+.genre-btn {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
