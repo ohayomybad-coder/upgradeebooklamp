@@ -1,57 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noctara | Access</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { background: #080808; color: white; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .login-card { background: #111; padding: 40px; border-radius: 20px; border: 1px solid #222; width: 320px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
-        h1 { font-weight: 200; letter-spacing: 5px; margin-bottom: 30px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid #333; border-radius: 8px; color: white; box-sizing: border-box; outline: none; }
-        input:focus { border-color: #555; }
-        button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-primary { background: white; color: black; margin-bottom: 10px; }
-        .btn-github { background: #24292e; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-github:hover { background: #333; }
-        .divider { color: #444; font-size: 11px; margin: 15px 0; letter-spacing: 2px; }
-    </style>
+
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Login</title>
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Supabase SDK (MUST BE FIRST) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
-    <div class="login-card">
-        <h1>NOCTARA</h1>
-        <input type="email" id="email" placeholder="Email Address">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-primary" id="loginBtn">Sign In</button>
-        <div class="divider">OR</div>
-        <button class="btn-github" id="githubBtn">
-            <svg height="18" width="18" viewBox="0 0 16 16" fill="white"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-            GitHub
+
+  <section class="auth-section">
+
+    <div class="auth-container">
+
+      <p class="auth-label">WELCOME BACK</p>
+
+      <h1>Enter Noctara</h1>
+
+      <p class="auth-description">
+        Continue reading immersive stories and publish your imagination.
+      </p>
+
+      <form class="auth-form">
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="Enter your email">
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" placeholder="Enter your password">
+        </div>
+
+        <button type="button" class="login-btn" onclick="handleLogin()">
+          Login
         </button>
+
+        <button type="button" class="github-btn" onclick="loginWithGitHub()">
+          Continue with GitHub
+        </button>
+
+      </form>
+
     </div>
 
-    <script>
-        const SUPABASE_URL = "https://bbixsobnhcoyikvodxdg.supabase.co";
-        const SUPABASE_ANON_KEY = "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiaXhzb2JuaGNveWlrdm9keGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Njc2MTQsImV4cCI6MjA5NDM0MzYxNH0.Ogx2agY-KVRKoRnl4kYhJy5G4_da0rqzRgIxqRr52TM";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </section>
 
-        // GitHub Logic
-        document.getElementById('githubBtn').onclick = async () => {
-            await supabase.auth.signInWithOAuth({
-                provider: 'github',
-                options: { redirectTo: 'https://ohayomybad-coder.github.io/upgradeebooklamp/index.html' }
-            });
-        };
+  <!-- YOUR JS FILE (MUST BE LAST) -->
+  <script src="script.js"></script>
 
-        // Email Logic
-        document.getElementById('loginBtn').onclick = async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) alert(error.message);
-            else window.location.href = "index.html";
-        };
-    </script>
 </body>
 </html>
