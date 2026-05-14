@@ -127,3 +127,19 @@ hiddenElements.forEach((el) => {
   observer.observe(el);
 
 });
+async function loginUser(email, password) {
+
+  const { data, error } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+    alert(error.message);
+  } else {
+    alert("Login successful!");
+    window.location.href = "index.html";
+  }
+
+}
