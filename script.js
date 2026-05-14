@@ -1,73 +1,59 @@
-// INITIALIZATION
 const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_337gZQxl2pqu6OvNkoeDOQ_lG0xgdc9";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// SESSION CHECK - Runs on every page load
-async function checkUser() {
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  const authOnlyLinks = document.querySelectorAll('.auth-only');
-  const loginLink = document.getElementById('login-link');
-  const logoutBtn = document.getElementById('logout-btn');
+// Check if supabase loaded correctly from the CDN
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-  if (session) {
-    // User is logged in
-    authOnlyLinks.forEach(link => link.style.display = 'block');
-    if (loginLink) loginLink.style.display = 'none';
-    if (logoutBtn) logoutBtn.style.display = 'block';
-    console.log("Logged in as:", session.user.email);
-  } else {
-    // User is logged out
-    authOnlyLinks.forEach(link => link.style.display = 'none');
-    if (loginLink) loginLink.style.display = 'block';
-    if (logoutBtn) logoutBtn.style.display = 'none';
-  }
-}
-
-checkUser();
-
-// LOGIN LOGIC
+/* ---------------- LOGIN ---------------- */
 async function handleLogin() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  const emailInput = document.querySelector('input[type="email"]');
+  const passwordInput = document.querySelector('input[type="password"]');
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (!emailInput || !passwordInput) return;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: emailInput.value,
+    password: passwordInput.value
+  });
 
   if (error) {
-    alert("Error: " + error.message);
+    alert(error.message);
   } else {
+    alert("Welcome back!");
     window.location.href = "index.html";
   }
 }
 
-// GITHUB LOGIN (GitHub Pages Fix)
-async function loginWithGitHub() {
-  // This detects if you are in a subfolder on GitHub Pages
-  const redirectUrl = window.location.origin + window.location.pathname.replace('login.html', 'index.html');
-  
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "github",
-    options: { redirectTo: redirectUrl }
-  });
-
-  if (error) alert(error.message);
-}
-
-// LOGOUT
-async function logout() {
-  await supabase.auth.signOut();
-  window.location.href = "index.html";
-}
-
-// SEARCH FILTER
+/* ---------------- SEARCH ---------------- */
 const searchBar = document.querySelector(".search-bar");
 if (searchBar) {
   searchBar.addEventListener("input", () => {
-    const query = searchBar.value.toLowerCase();
-    document.querySelectorAll(".book-link").forEach(card => {
-      const title = card.querySelector("h3").innerText.toLowerCase();
-      card.style.display = title.includes(query) ? "block" : "none";
+    const searchValue = searchBar.value.toLowerCase();
+    document.querySelectorAll(".book-link").forEach((book) => {
+      const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
+      book.style.display = title.includes(searchValue) ? "block" : "none";
     });
   });
 }
+
+/* ---------------- GENRE FILTER ---------------- */
+const genreButtons = document.querySelectorAll(".genre-btn");
+genreButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    genreButtons.forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+    
+    const genre = button.textContent.toLowerCase();
+    document.querySelectorAll(".book-link").forEach((book) => {
+      const title = book.querySelector("h3")?.textContent?.toLowerCase() || "";
+      if (genre === "all" || title.includes(genre)) {
+        book.style.display = "block";
+      } else {
+        // Simple logic for your specific titles
+        if (genre === "fantasy" && title.includes("lantern")) book.style.display = "block";
+        else if (genre === "horror" && title.includes("rain")) book.style.display = "block";
+        else book.style.display = "none";
+      }
+    });
+  });
+});
