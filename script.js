@@ -1,43 +1,91 @@
 /* ---------------- SUPABASE CONFIG ---------------- */
-const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co"; //
+const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bmlma2pudnhjeWJobmtmcWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NDczNTYsImV4cCI6MjA5NDMyMzM1Nn0.DIcLUpP5XtTTTmBCLveZ-sxUyIwRd9QBPct79LTmXQk";
 
+// Initialize Supabase
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ---------------- AUTHENTICATION ---------------- */
+/* ---------------- LOGIN LOGIC ---------------- */
 async function handleLogin() {
-  const email = document.querySelector('input[type="email"]')?.value; //
-  const password = document.querySelector('input[type="password"]')?.value; //
+  // These IDs must match the ones in your login.html
+  const email = document.getElementById('login-email')?.value;
+  const password = document.getElementById('login-password')?.value;
 
-  if (!email || !password) return alert("Please enter your details.");
+  if (!email || !password) {
+    alert("Please enter both email and password.");
+    return;
+  }
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  console.log("Attempting to enter Noctara...");
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
 
   if (error) {
-    alert("Error: " + error.message);
+    alert("Login Error: " + error.message);
   } else {
+    alert("Welcome back to Noctara!");
     window.location.href = "index.html"; 
   }
 }
 
-/* ---------------- READING PROGRESS ---------------- */
-const progressBar = document.querySelector('.reading-progress'); //
-if (progressBar) {
-  window.addEventListener('scroll', () => {
-    const totalHeight = document.body.scrollHeight - window.innerHeight;
-    const progress = (window.pageYOffset / totalHeight) * 100;
-    progressBar.style.width = progress + '%';
+/* ---------------- GITHUB LOGIN ---------------- */
+async function loginWithGitHub() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      // This fix ensures it works on GitHub Pages subfolders
+      redirectTo: window.location.origin + window.location.pathname.replace('login.html', 'index.html')
+    }
   });
+  
+  if (error) alert(error.message);
 }
 
-/* ---------------- SEARCH & FILTERS ---------------- */
-const searchBar = document.querySelector(".search-bar"); //
+/* ---------------- THE SHINE (SEARCH FILTER) ---------------- */
+const searchBar = document.querySelector(".search-bar");
 if (searchBar) {
   searchBar.addEventListener("input", (e) => {
     const query = e.target.value.toLowerCase();
-    document.querySelectorAll(".book-link").forEach(book => {
+    const books = document.querySelectorAll(".book-link");
+    
+    books.forEach(book => {
       const title = book.querySelector("h3").innerText.toLowerCase();
-      book.style.display = title.includes(query) ? "block" : "none";
+      if (title.includes(query)) {
+        book.style.display = "block";
+      } else {
+        book.style.display = "none";
+      }
     });
   });
 }
+
+/* ---------------- THE SHINE (GENRE FILTER) ---------------- */
+const genreBtns = document.querySelectorAll(".genre-btn");
+genreBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    // Remove active class from all and add to clicked
+    genreBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    
+    const selectedGenre = btn.innerText.toLowerCase();
+    const books = document.querySelectorAll(".book-link");
+
+    books.forEach(book => {
+      const title = book.querySelector("h3").innerText.toLowerCase();
+      if (selectedGenre === "all") {
+        book.style.display = "block";
+      } else if (selectedGenre === "fantasy" && title.includes("lantern")) {
+        book.style.display = "block";
+      } else if (selectedGenre === "horror" && title.includes("rain")) {
+        book.style.display = "block";
+      } else if (selectedGenre === "philosophy" && title.includes("fragments")) {
+        book.style.display = "block";
+      } else {
+        book.style.display = "none";
+      }
+    });
+  });
+});
