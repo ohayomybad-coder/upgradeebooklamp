@@ -154,3 +154,18 @@ function handleLogin() {
   loginUser(email, password);
 
 }
+async function loginWithGitHub() {
+
+  const { data, error } =
+    await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: "http://127.0.0.1:5500/index.html"
+      }
+    });
+
+  if (error) {
+    alert(error.message);
+  }
+
+}
