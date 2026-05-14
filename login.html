@@ -3,95 +3,52 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Enter Noctara</title>
-  
+  <title>Login | Noctara</title>
   <link rel="stylesheet" href="style.css"/>
-  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    /* Adding a fallback for the "shine" in case style.css fails to load */
-    body { background: #0d0d0d; color: white; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-    .auth-container { background: #151515; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; }
-    h1 { font-family: 'Merriweather', serif; font-size: 32px; margin-bottom: 10px; }
-    .auth-label { color: #888; letter-spacing: 2px; font-size: 12px; margin-bottom: 20px; }
-    .input-group { text-align: left; margin-bottom: 15px; }
-    .input-group label { display: block; font-size: 14px; margin-bottom: 8px; color: #ccc; }
-    .input-group input { width: 100%; background: #0a0a0a; border: 1px solid #333; padding: 12px; border-radius: 12px; color: white; outline: none; transition: 0.3s; }
-    .input-group input:focus { border-color: #666; }
-    .login-btn { width: 100%; background: white; color: black; border: none; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-    .github-btn { width: 100%; background: #24292e; color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-    .login-btn:hover, .github-btn:hover { transform: translateY(-2px); opacity: 0.9; }
-  </style>
 </head>
 <body>
 
   <div class="auth-container">
-    <p class="auth-label">WELCOME BACK</p>
     <h1>Enter Noctara</h1>
-    
-    <form onsubmit="event.preventDefault();">
-      <div class="input-group">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="email@example.com" required>
-      </div>
-
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" id="login-password" placeholder="••••••••" required>
-      </div>
-
-      <button type="button" class="login-btn" onclick="handleLogin()">Login</button>
-      
-      <button type="button" class="github-btn" onclick="loginWithGitHub()">
-        Continue with GitHub
-      </button>
-    </form>
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="name@example.com">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••">
+    </div>
+    <button type="button" class="login-btn" id="loginBtn">Login</button>
+    <button type="button" class="github-btn" id="githubBtn">Continue with GitHub</button>
   </div>
 
   <script>
-    // 1. SUPABASE CONNECTION
     const SUPABASE_URL = "https://xynifkjnvxcybhnkfqka.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5bmlma2pudnhjeWJobmtmcWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NDczNTYsImV4cCI6MjA5NDMyMzM1Nn0.DIcLUpP5XtTTTmBCLveZ-sxUyIwRd9QBPct79LTmXQk";
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // 2. EMAIL LOGIN
-    async function handleLogin() {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-
-      if (!email || !password) {
-        alert("Please enter credentials");
-        return;
-      }
-
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        alert("Error: " + error.message);
-      } else {
-        alert("Welcome to Noctara!");
-        window.location.href = "index.html";
-      }
-    }
-
-    // 3. GITHUB LOGIN
-    async function loginWithGitHub() {
+    // GITHUB LOGIN
+    document.getElementById('githubBtn').addEventListener('click', async () => {
+      // This tells Supabase EXACTLY where to go back to based on your screenshot
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: window.location.origin + window.location.pathname.replace('login.html', 'index.html')
+          redirectTo: 'https://ohayomybad-coder.github.io/upgradeebooklamp/index.html'
         }
       });
+      if (error) alert("GitHub Error: " + error.message);
+    });
 
-      if (error) {
-        alert("GitHub Error: " + error.message);
-      }
-    }
+    // EMAIL LOGIN
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) alert("Login Error: " + error.message);
+      else window.location.href = "index.html";
+    });
   </script>
 </body>
 </html>
