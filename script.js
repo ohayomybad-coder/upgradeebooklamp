@@ -91,3 +91,32 @@ genreButtons.forEach((button) => {
   });
 
 });
+// SCROLL REVEAL ANIMATION
+
+const hiddenElements =
+  document.querySelectorAll(
+    ".book-card, .continue-reading, .hero-content, .chapter-container"
+  );
+
+const observer =
+  new IntersectionObserver((entries) => {
+
+    entries.forEach((entry) => {
+
+      if(entry.isIntersecting){
+
+        entry.target.classList.add("show");
+
+      }
+
+    });
+
+  });
+
+hiddenElements.forEach((el) => {
+
+  el.classList.add("hidden");
+
+  observer.observe(el);
+
+});
